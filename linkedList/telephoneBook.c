@@ -101,6 +101,43 @@ void insertBeforeCurrent(contact e)
     }
 }
 
+void insertAtTail(contact ct)
+{
+    node *new = makeNewNode(ct);
+    if (root == NULL)
+    {
+        root = new;
+        cur = new;
+        prev = NULL;
+        return;
+    }
+    node *p = root;
+    while (p->next != NULL)
+        p = p->next;
+    p->next = new;
+    cur = new;
+    prev = p;
+}
+
+/* determine prev */
+void updatePrev()
+{
+    if (root == NULL)
+    {
+        prev = NULL;
+        return;
+    }
+    if (root == cur)
+    {
+        prev = NULL;
+        return;
+    }
+    node *tmp = root;
+    while (tmp->next != cur && tmp->next != NULL)
+        tmp = tmp->next;
+    prev = tmp;
+}
+
 void displayNode(node *p)
 {
     if (p == NULL)
@@ -120,6 +157,16 @@ void displayList()
         p = p->next;
     }
 }
+void deleteFirstElement()
+{
+    node *del = root;
+    if (del == NULL)
+        return;
+    root = del->next;
+    free(del);
+    cur = root;
+    prev = NULL; // update prev – cur
+}
 
 int main()
 {
@@ -138,6 +185,7 @@ int main()
         printf("1. Insert at head\n");
         printf("2. Insert after current\n");
         printf("3. Insert before current\n");
+        printf("4. Insert at tail\n");
         printf("Choice: ");
         scanf("%d", &choice);
         getchar(); // clear newline character
@@ -153,6 +201,10 @@ int main()
         else if (choice == 3)
         {
             insertBeforeCurrent(tmp);
+        }
+        else if (choice == 4)
+        {
+            insertAtTail(tmp);
         }
         else
         {
