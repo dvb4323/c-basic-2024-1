@@ -18,6 +18,7 @@ typedef struct list_el node;
 
 node *root = NULL;
 node *cur = NULL;
+node *prev = NULL;
 
 node *makeNewNode(contact ct)
 {
@@ -60,6 +61,46 @@ void insertAtHead(contact ct)
     cur = root;
 }
 
+void insertAfterCurrent(contact ct)
+{
+    node *new_node = makeNewNode(ct);
+    if (root == NULL)
+    {
+        root = new_node;
+        cur = root;
+    }
+    else if (cur == NULL)
+        return;
+    else
+    {
+        new_node->next = cur->next;
+        cur->next = new_node;
+        cur = cur->next;
+    }
+}
+
+void insertBeforeCurrent(contact e)
+{
+    node *new_node = makeNewNode(e);
+    if (root == NULL)
+    { /* if there is no element */
+        root = new_node;
+        cur = root;
+        prev = NULL;
+    }
+    else
+    {
+        new_node->next = cur;
+        if (cur == root)
+        {                    /* if cur pointed to first element */
+            root = new_node; /* nut moi them vao tro thanh dau danh sach */
+        }
+        else
+            prev->next = new_node; // assume prev pointer always point to the previous node
+        cur = new_node;
+    }
+}
+
 void displayNode(node *p)
 {
     if (p == NULL)
@@ -83,7 +124,7 @@ void displayList()
 int main()
 {
     contact tmp;
-    int i, n;
+    int i, n, choice;
 
     printf("Input the number of contacts: ");
     scanf("%d", &n);
@@ -92,7 +133,31 @@ int main()
     for (i = 0; i < n; i++)
     {
         tmp = readNode();
-        insertAtHead(tmp);
+
+        printf("Choose insertion method:\n");
+        printf("1. Insert at head\n");
+        printf("2. Insert after current\n");
+        printf("3. Insert before current\n");
+        printf("Choice: ");
+        scanf("%d", &choice);
+        getchar(); // clear newline character
+
+        if (choice == 1)
+        {
+            insertAtHead(tmp);
+        }
+        else if (choice == 2)
+        {
+            insertAfterCurrent(tmp);
+        }
+        else if (choice == 3)
+        {
+            insertBeforeCurrent(tmp);
+        }
+        else
+        {
+            printf("Invalid choice, skipping insertion.\n");
+        }
     }
 
     printf("\nContact List:\n");
